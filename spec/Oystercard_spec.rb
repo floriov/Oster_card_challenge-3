@@ -2,9 +2,6 @@ require 'Oystercard'
 
 describe Oystercard do
 
-  it "checks the cards balance is initialized at 0" do
-    card = Oystercard.new
-    expect(card.balance).to eq 0
-  end
+  it { is_expected.to have_attributes(balance: 0) }
   
 end
