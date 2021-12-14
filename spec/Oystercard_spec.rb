@@ -4,7 +4,7 @@ describe Oystercard do
   let(:card) { Oystercard.new }
 
   it { is_expected.to have_attributes(balance: 0, in_use: false) }
-  it { is_expected.to respond_to(:top_up, :deduct).with(1).argument }
+  it { is_expected.to respond_to(:top_up).with(1).argument }
   it { is_expected.to respond_to(:touch_in, :touch_out, :in_journey?) }
 
   describe '#top_up' do
@@ -13,13 +13,6 @@ describe Oystercard do
     end
     it "throws an error if the top_up called would exceed the £90 limit of the balance" do
       expect { card.top_up(100) }.to raise_error"Balance cannot exceed £#{Oystercard::LIMIT_VALUE}"
-    end
-  end
-
-  describe '#deduct' do
-    it "deducts an amount from the balance" do
-      card.top_up(45)
-      expect { card.deduct(5) }.to change(card, :balance).by(-5)
     end
   end
 
@@ -41,7 +34,12 @@ describe Oystercard do
   describe '#touch_out' do
     it "sets in_use to false when card is touched out" do
       card.touch_out
-      expect(card.in_journey?).to be false
+      expect(card.touch_out).to be false
+    end
+
+    it "deducts minimum fare from balance when thouching out" do
+      card.top_up(10)
+      expect {card.touch_out }.to change(card, :balance).by(-1)
     end
   end
 end
