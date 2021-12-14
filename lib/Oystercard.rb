@@ -17,6 +17,7 @@ class Oystercard
   end
 
   def touch_in
+    raise "Insufficient balance."
     @in_use = true
   end
 

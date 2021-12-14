@@ -24,9 +24,17 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
-    it "sets in_use to be true when touch_in called" do
-      card.touch_in
-      expect(card.in_journey?).to be true
+    context 'with sufficient balance' do
+      it "sets in_use to be true when touch_in called" do
+        card.top_up(1)
+        expect(card.touch_in).to be true
+      end
+    end
+
+    context 'with insufficient balance' do
+      it 'raises an error' do
+        expect { card.touch_in }.to raise_error "Insufficient balance."
+      end
     end
   end
 
