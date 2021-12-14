@@ -4,9 +4,9 @@ describe Oystercard do
   let(:card) { Oystercard.new }
 
   it { is_expected.to have_attributes(balance: 0) }
-  it { is_expected.to respond_to(:top_up).with(1).argument }
+  it { is_expected.to respond_to(:top_up, :deduct).with(1).argument }
+  it { is_expected.to respond_to(:touch_in) }
 
-  # we want to test whether top_up method adds amount to balance
   describe '#top_up' do
     it "adds top_up amount to balance" do
       expect { card.top_up(40) }.to change(card, :balance).by(40)
@@ -19,7 +19,8 @@ describe Oystercard do
   describe '#deduct' do
     it "deducts an amount from the balance" do
       card.top_up(45)
-      expect { card.deduct(5) }.to change(card, :balance).by(5)
+
+      expect { card.deduct(5) }.to change(card, :balance).by(-5)
     end
   end
 end
