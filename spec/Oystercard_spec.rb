@@ -5,7 +5,7 @@ describe Oystercard do
 
   it { is_expected.to have_attributes(balance: 0) }
   it { is_expected.to respond_to(:top_up, :deduct).with(1).argument }
-  it { is_expected.to respond_to(:touch_in) }
+  it { is_expected.to respond_to(:touch_in,:touch_out, :in_journey?) }
 
   describe '#top_up' do
     it "adds top_up amount to balance" do
@@ -23,4 +23,19 @@ describe Oystercard do
       expect { card.deduct(5) }.to change(card, :balance).by(-5)
     end
   end
+
+  describe '#touch_in' do
+    it "sets in_use to be true when touch_in called" do
+      card.touch_in
+      expect(card.in_journey?).to be true
+    end
+  end
+
+  describe '#touch_out' do
+    it "sets in_use to false when card is touched out" do
+      card.touch_out
+      expect(card.in_journey?).to be false
+    end
+  end
+
 end
