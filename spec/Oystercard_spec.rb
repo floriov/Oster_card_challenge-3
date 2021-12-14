@@ -15,4 +15,11 @@ describe Oystercard do
       expect { card.top_up(100) }.to raise_error"Balance cannot exceed £#{Oystercard::LIMIT_VALUE}"
     end
   end
+
+  describe '#deduct' do
+    it "deducts an amount from the balance" do
+      card.top_up(45)
+      expect { card.deduct(5) }.to change(card, :balance).by(5)
+    end
+  end
 end
