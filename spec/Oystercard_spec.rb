@@ -3,9 +3,9 @@ require 'Oystercard'
 describe Oystercard do
   let(:card) { Oystercard.new }
 
-  it { is_expected.to have_attributes(balance: 0) }
+  it { is_expected.to have_attributes(balance: 0, in_use: false) }
   it { is_expected.to respond_to(:top_up, :deduct).with(1).argument }
-  it { is_expected.to respond_to(:touch_in,:touch_out, :in_journey?) }
+  it { is_expected.to respond_to(:touch_in, :touch_out, :in_journey?) }
 
   describe '#top_up' do
     it "adds top_up amount to balance" do
@@ -19,7 +19,6 @@ describe Oystercard do
   describe '#deduct' do
     it "deducts an amount from the balance" do
       card.top_up(45)
-
       expect { card.deduct(5) }.to change(card, :balance).by(-5)
     end
   end
@@ -37,5 +36,4 @@ describe Oystercard do
       expect(card.in_journey?).to be false
     end
   end
-
 end
