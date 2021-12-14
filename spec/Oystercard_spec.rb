@@ -1,3 +1,4 @@
+require 'Oystercard'
 
 describe Oystercard do
   
