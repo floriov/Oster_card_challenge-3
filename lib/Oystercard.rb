@@ -26,7 +26,7 @@ class Oystercard
     @journeys["entry_station"] = @entry_station
     @journeys["exit_station"] = station
 
-    @journeys2[@entry_station] = station
+    # @journeys2[@entry_station] = station
 
     # @journeys[entry_station] = @entry_station
     # @journeys[exit_station] = @exit_station
