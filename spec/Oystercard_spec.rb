@@ -4,7 +4,7 @@ describe Oystercard do
   let(:card) { Oystercard.new }
   let(:station) { "Waterloo" }
 
-  it { is_expected.to have_attributes(balance: 0, in_use: false) }
+  it { is_expected.to have_attributes(balance: 0) }
   it { is_expected.to respond_to(:top_up).with(1).argument }
   it { is_expected.to respond_to(:touch_in, :touch_out, :in_journey?) }
 
@@ -43,18 +43,36 @@ describe Oystercard do
 
   describe '#touch_out' do
     it "sets in_use to false when card is touched out" do
-      card.touch_out
+      card.touch_out(station)
       expect(card.in_journey?).to be false
     end
 
     it "deducts minimum fare from balance when thouching out" do
       card.top_up(10)
-      expect {card.touch_out }.to change(card, :balance).by(-1)
+      expect {card.touch_out(station) }.to change(card, :balance).by(-1)
     end
 
     it "sets entry_station to nil when card touched out" do
-      card.touch_out
+      card.touch_out(station)
       expect(card.entry_station).to eq nil
     end
+
+    
+  end
+
+  describe '#journeys' do
+    let(:journey){ {"entry_station" => station, "exit_station" => station} }
+     
+   it 'has an empty list of journeys by default' do
+    expect(card.journeys).to be_empty
+   end
+
+   it 'creates one journey by touching in and touching out' do
+    
+    card.top_up(10)
+    card.touch_in(station)
+    card.touch_out(station)
+    expect(card.journeys).to eq journey
+   end
   end
 end
