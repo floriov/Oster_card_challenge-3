@@ -2,6 +2,7 @@ require 'Oystercard'
 
 describe Oystercard do
   let(:card) { Oystercard.new }
+  let(:station) { "Waterloo" }
 
   it { is_expected.to have_attributes(balance: 0, in_use: false) }
   it { is_expected.to respond_to(:top_up).with(1).argument }
@@ -20,26 +21,40 @@ describe Oystercard do
     context 'with sufficient balance' do
       it "sets in_use to be true when touch_in called" do
         card.top_up(1)
-        expect(card.touch_in).to be true
+        card.touch_in(station)
+        expect(card.in_journey?).to be true
       end
     end
 
     context 'with insufficient balance' do
       it 'raises an error' do
-        expect { card.touch_in }.to raise_error "Insufficient balance."
+        expect { card.touch_in(station) }.to raise_error "Insufficient balance."
       end
     end
+
+    it "shows the entry station when the user touches in" do
+      card.top_up(1)
+      card.touch_in(station)
+      expect(card.entry_station).to eq station
+    end
+
+
   end
 
   describe '#touch_out' do
     it "sets in_use to false when card is touched out" do
       card.touch_out
-      expect(card.touch_out).to be false
+      expect(card.in_journey?).to be false
     end
 
     it "deducts minimum fare from balance when thouching out" do
       card.top_up(10)
       expect {card.touch_out }.to change(card, :balance).by(-1)
+    end
+
+    it "sets entry_station to nil when card touched out" do
+      card.touch_out
+      expect(card.entry_station).to eq nil
     end
   end
 end
