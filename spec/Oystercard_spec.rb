@@ -44,14 +44,7 @@ describe Oystercard do
       card.top_up(10)
       card.touch_in(station)
       expect {card.touch_out(station) }.to change(card, :balance).by(-1)
-    end
-
-    it "sets entry_station to nil when card touched out" do
-      card.touch_out(station)
-      expect(card.entry_station).to eq nil
-    end
-
-  
+    end 
   end
 
   describe '#journeys' do
@@ -71,13 +64,13 @@ describe Oystercard do
 
    it 'returns a penalty fare if touched out but not touched in' do
     card.top_up(10)
-    expect {subject.touch_out(station)}.to change{subject.balance}.by -Oystercard::PENALTY_FARE
+    expect {subject.touch_out(station)}.to change{subject.balance}.by -Journey::PENALTY_FARE
    end
 
    it 'returns a penalty fare if touched in but not touched out' do
     card.top_up(15)
     card.touch_in(station)
-    expect {card.touch_in(station)}.to change{card.balance}.by -Oystercard::PENALTY_FARE
+    expect {card.touch_in(station)}.to change{card.balance}.by -Journey::PENALTY_FARE
    end
   end
 end
