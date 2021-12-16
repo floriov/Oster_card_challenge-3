@@ -20,8 +20,12 @@ class Journey
       end
 
       def fare(card)
-        return card.get_fare(MINIMUM_FARE) if @journey[:entry_station] && @journey[:exit_station]
-        card.get_fare(PENALTY_FARE) 
+        if @journey[:entry_station] && @journey[:exit_station] 
+          card.get_fare(MINIMUM_FARE) 
+        else 
+          card.get_fare(PENALTY_FARE) 
+          return "Journey incomplete"
+        end
       end
 
 end
