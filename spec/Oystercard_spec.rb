@@ -32,13 +32,6 @@ describe Oystercard do
       end
     end
 
-    it "shows the entry station when the user touches in" do
-      card.top_up(1)
-      card.touch_in(station)
-      expect(card.entry_station).to eq station
-    end
-
-
   end
 
   describe '#touch_out' do
@@ -49,6 +42,7 @@ describe Oystercard do
 
     it "deducts minimum fare from balance when thouching out" do
       card.top_up(10)
+      card.touch_in(station)
       expect {card.touch_out(station) }.to change(card, :balance).by(-1)
     end
 
@@ -57,7 +51,7 @@ describe Oystercard do
       expect(card.entry_station).to eq nil
     end
 
-    
+  
   end
 
   describe '#journeys' do
@@ -72,7 +66,18 @@ describe Oystercard do
     card.top_up(10)
     card.touch_in(station)
     card.touch_out(station)
-    expect(card.journeys).to eq journey
+    expect(card.journeys).to eq [{entry_station: "Waterloo", exit_station: "Waterloo"}]
+   end
+
+   it 'returns a penalty fare if touched out but not touched in' do
+    card.top_up(10)
+    expect {subject.touch_out(station)}.to change{subject.balance}.by -Oystercard::PENALTY_FARE
+   end
+
+   it 'returns a penalty fare if touched in but not touched out' do
+    card.top_up(15)
+    card.touch_in(station)
+    expect {card.touch_in(station)}.to change{card.balance}.by -Oystercard::PENALTY_FARE
    end
   end
 end
